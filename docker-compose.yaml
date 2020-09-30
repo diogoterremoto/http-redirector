@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  app:
+    container_name: ${APP_NAME}
+    build: .
+    restart: unless-stopped
+    ports:
+      - ${PORT:-8080}:${PORT:-8080}
+    env_file: .env
+    volumes:
+      - ./app/:/var/www/
+      - /var/www/node_modules # This will prevent `node_modules` to sync
+    environment:
+        ENV: 'development'

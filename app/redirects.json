@@ -1,0 +1,30 @@
+[
+	{
+		"source": "/index.php?template=user",
+		"destination": "/user",
+		"type": 302
+	},
+	{
+		"source": "/template_id=(21|32|43)",
+		"destination": "/about",
+		"type": 301,
+		"cache": true
+	},
+	{
+		"source": "/assets/:path*",
+		"destination": "https://assets.acme.org/:path",
+		"type": 301,
+		"cache": true
+	},
+	{
+		"source": "http://localhost:8081/pages/about",
+		"destination": "/about",
+		"type": 301,
+		"cache": true
+	},
+	{
+		"source": "http://localhost:8080/users/:name*",
+		"destination": "https://:name.acme.org/",
+		"type": 302
+	}
+]

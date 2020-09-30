@@ -1,0 +1,43 @@
+{
+	"steps": [
+		{
+			"id": "build-image",
+			"name": "gcr.io/cloud-builders/docker",
+			"args": [
+				"build",
+				"-t",
+				"${_DOCKER_REPOSITORY}:$SHORT_SHA",
+				"-t",
+				"${_DOCKER_REPOSITORY}:latest",
+				"."
+			]
+		},
+		{
+			"id": "push-image",
+			"name": "gcr.io/cloud-builders/docker",
+			"args": [
+				"push",
+				"${_DOCKER_REPOSITORY}"
+			]
+		},
+		{
+			"id": "deploy",
+			"name": "gcr.io/cloud-builders/gcloud",
+			"args": [
+				"gcloud",
+				"run",
+				"deploy",
+				"${_SERVICE_NAME}",
+				"--region=${_SERVICE_REGION}",
+				"--image=${_DOCKER_REPOSITORY}",
+				"--platform=managed",
+				"--allow-unauthenticated"
+			]
+		}
+	],
+	"substitutions": {
+		"_SERVICE_NAME": "httpRedirector",
+		"_SERVICE_REGION": "europe-west1",
+		"_DOCKER_REPOSITORY": "diogoterremoto/http-redirector"
+	}
+}

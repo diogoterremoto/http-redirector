@@ -1,0 +1,10 @@
+version: '3.5'
+
+services:
+  app:
+    container_name: ${APP_NAME}
+    build: .
+    restart: unless-stopped
+    ports:
+      - ${PORT:-8080}:${PORT:-8080}
+    env_file: .env
