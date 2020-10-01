@@ -18,6 +18,10 @@ app.get("*", (req: express.Request, res: express.Response) => {
 	redirect(req, res)
 });
 
+// This will tell Express to to determine the connection and the IP address of the client
+// via X-Forwarded-* headers, usually needed when it's behind a front-facing proxy.
+app.enable("trust proxy");
+
 // Start the express server
 app.listen(PORT, () => {
 	log(`Server started at http://localhost:${PORT}`);
