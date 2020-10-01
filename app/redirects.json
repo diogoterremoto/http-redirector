@@ -17,7 +17,13 @@
 		"cache": true
 	},
 	{
-		"source": "http://localhost:8081/pages/about",
+		"source": "http://localhost:8080/",
+		"destination": "https://acme.org",
+		"type": 301,
+		"cache": true
+	},
+	{
+		"source": "http://localhost:8080/pages/about",
 		"destination": "/about",
 		"type": 301,
 		"cache": true
