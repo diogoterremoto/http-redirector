@@ -13,3 +13,4 @@ services:
       - /var/www/node_modules # This will prevent `node_modules` to sync
     environment:
         ENV: 'development'
+        LOG: 'true'
