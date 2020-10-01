@@ -14,12 +14,13 @@ const app = express();
 
 // Run `redirect` function on all routes
 app.get("*", (req: express.Request, res: express.Response) => {
+	log("Request received.")
 	redirect(req, res)
 });
 
 // Start the express server
 app.listen(PORT, () => {
-	console.log(`Server started at http://localhost:${PORT}`);
+	log(`Server started at http://localhost:${PORT}`);
 });
 
 /**
@@ -27,20 +28,29 @@ app.listen(PORT, () => {
  */
 function redirect(req: express.Request, res: express.Response) {
 
+	log("Going to evaluate the request.")
+
 	const pathUrl = req.originalUrl;
 	const fullUrl = req.protocol + "://" + req.get("host") + pathUrl;
+
+	log ("pathUrl is: ${pathUrl}");
+	log ("fullUrl is: ${fullUrl}");
 
 	// Find redirect entry
 	const redirectEntry: Redirect = _.find(REDIRECTS, (item) =>
 		!!(pathToRegexp(item.source).exec(fullUrl) || pathToRegexp(item.source).exec(pathUrl)));
 
+
 	// Redirect to destination if found
 	if (redirectEntry) {
+		log ("Found redirect entry: ${JSON.stringify(redirectEntry)}");
 
 		// Evaluate what URL segment to match.
 		// If the redirect declaration source is a valid HTTP URL, the request full URL should be used.
 		const urlSegmentToMatch = isValidHttpUrl(redirectEntry.source) ? fullUrl : pathUrl;
 		const destination = getDestination(redirectEntry, urlSegmentToMatch);
+
+		log ("Calculated Destination is: ${destination)}");
 
 		if (!redirectEntry.cache) {
 			setNoCacheHeaders(res);
@@ -48,7 +58,8 @@ function redirect(req: express.Request, res: express.Response) {
 
 		res.redirect(redirectEntry.type || 302, destination || "/");
 	} else {
-		res.status(404).send("NOT FOUND.")
+		log ("No redirect entry was found. Sending 404.");
+		res.status(404).send("No redirect entry was found.")
 	}
 }
 
@@ -102,4 +113,10 @@ function isValidHttpUrl(string: string) {
 	}
 
 	return url.protocol === "http:" || url.protocol === "https:";
+}
+
+function log(...message) {
+	if (process.env.LOG) {
+		console.log(message)
+	}
 }
