@@ -33,8 +33,7 @@ function redirect(req: express.Request, res: express.Response) {
 	const pathUrl = req.originalUrl;
 	const fullUrl = req.protocol + "://" + req.get("host") + pathUrl;
 
-	log ("pathUrl is: ${pathUrl}");
-	log ("fullUrl is: ${fullUrl}");
+	log (`Request URL is: ${fullUrl}`);
 
 	// Find redirect entry
 	const redirectEntry: Redirect = _.find(REDIRECTS, (item) =>
@@ -43,14 +42,14 @@ function redirect(req: express.Request, res: express.Response) {
 
 	// Redirect to destination if found
 	if (redirectEntry) {
-		log ("Found redirect entry: ${JSON.stringify(redirectEntry)}");
+		log(`Found redirect entry: ${JSON.stringify(redirectEntry)}`);
 
 		// Evaluate what URL segment to match.
 		// If the redirect declaration source is a valid HTTP URL, the request full URL should be used.
 		const urlSegmentToMatch = isValidHttpUrl(redirectEntry.source) ? fullUrl : pathUrl;
 		const destination = getDestination(redirectEntry, urlSegmentToMatch);
 
-		log ("Calculated Destination is: ${destination)}");
+		log(`Calculated destination is: ${destination}`);
 
 		if (!redirectEntry.cache) {
 			setNoCacheHeaders(res);
@@ -115,8 +114,8 @@ function isValidHttpUrl(string: string) {
 	return url.protocol === "http:" || url.protocol === "https:";
 }
 
-function log(...message) {
+function log(...args) {
 	if (process.env.LOG) {
-		console.log(message)
+		console.log(...args)
 	}
 }
